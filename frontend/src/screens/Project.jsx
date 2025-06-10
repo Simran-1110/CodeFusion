@@ -9,18 +9,18 @@ import { getWebContainer } from '../config/webContainer.js'
 
 
 function SyntaxHighlightedCode(props) {
-    const ref = useRef(null)
+    const ref = useRef(null);
 
-    React.useEffect(() => {
-        if (ref.current && props.className?.includes('lang-') && window.hljs) {
-            window.hljs.highlightElement(ref.current)
+    useEffect(() => {
+        if (ref.current && props.className?.includes('lang-')) {
+            hljs.highlightElement(ref.current);
 
-            // hljs won't reprocess the element unless this attribute is removed
-            ref.current.removeAttribute('data-highlighted')
+            // Optional: Remove attribute if you’re re-rendering same node
+            ref.current.removeAttribute('data-highlighted');
         }
-    }, [ props.className, props.children ])
+    }, [props.className, props.children]);
 
-    return <code {...props} ref={ref} />
+    return <code {...props} ref={ref} />;
 }
 
 
@@ -70,7 +70,7 @@ const Project = () => {
             projectId: location.state.project._id,
             users: Array.from(selectedUserId)
         }).then(res => {
-            console.log(res.data)
+            // console.log(res.data)
             setIsModalOpen(false)
 
         }).catch(err => {
