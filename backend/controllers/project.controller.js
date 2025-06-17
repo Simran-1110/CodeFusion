@@ -42,8 +42,10 @@ export const getAllProject = async (req, res) => {
             userId: loggedInUser._id
         })
 
+        // console.log("Req", req);
         return res.status(200).json({
-            projects: allUserProjects
+            projects: allUserProjects,
+            user: loggedInUser,
         })
 
     } catch (err) {

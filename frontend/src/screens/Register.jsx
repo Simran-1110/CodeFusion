@@ -7,7 +7,7 @@ const Register = () => {
 
     const [ email, setEmail ] = useState('')
     const [ password, setPassword ] = useState('')
-
+    const [error, setError] = useState('')
     const { setUser } = useContext(UserContext)
 
     const navigate = useNavigate()
@@ -26,7 +26,8 @@ const Register = () => {
             setUser(res.data.user)
             navigate('/')
         }).catch((err) => {
-            console.log(err.response.data)
+            if(err?.code==='ERR_NETWORK') setError("Unable to fetch data from the server")
+            else setError('Email has been already registered')
         })
     }
 
@@ -34,7 +35,8 @@ const Register = () => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-900">
             <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
-                <h2 className="text-2xl font-bold text-white mb-6">Register</h2>
+                <h2 className="text-2xl font-bold text-white mb-6 text-center">Register</h2>
+                <h3 className='w-full text-center font-semibold text-blue-400'>{error}</h3>
                 <form
                     onSubmit={submitHandler}
                 >

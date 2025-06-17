@@ -8,7 +8,7 @@ const Login = () => {
 
     const [ email, setEmail ] = useState('')
     const [ password, setPassword ] = useState('')
-
+    const [error , setError] = useState('')
     const { setUser } = useContext(UserContext)
 
     const navigate = useNavigate()
@@ -16,18 +16,19 @@ const Login = () => {
     function submitHandler(e) {
 
         e.preventDefault()
-
         axios.post('/users/login', {
             email,
             password
         }).then((res) => {
-            console.log(res.data)
-
+            console.log("On Login", res.data)
+            const token = res.data.token;
+            console.log({"token" : res.data.token, "user": res.data.user})
+            axios.defaults.headers.authorization = `Bearer ${token}`;
             localStorage.setItem('token', res.data.token)
             setUser(res.data.user)
-
-            navigate('/')
+            navigate('/', {replace: true })
         }).catch((err) => {
+            setError('Invalid Credentials')
             console.log(err.response.data)
         })
     }
@@ -35,7 +36,8 @@ const Login = () => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-900">
             <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
-                <h2 className="text-2xl font-bold text-white mb-6">Login</h2>
+                <h2 className="text-2xl font-bold text-white mb-6 text-center">Login</h2>
+                <h3 className='w-full text-center font-semibold text-blue-400'>{error}</h3>
                 <form
                     onSubmit={submitHandler}
                 >

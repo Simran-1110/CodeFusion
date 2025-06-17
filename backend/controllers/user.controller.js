@@ -52,12 +52,9 @@ export const loginController = async (req, res) => {
         }
 
         const token = await user.generateJWT();
-
         delete user._doc.password;
-
+        
         res.status(200).json({ user, token });
-
-
     } catch (err) {
 
         console.log(err);
@@ -78,13 +75,14 @@ export const logoutController = async (req, res) => {
     try {
 
         const token = req.cookies.token || req.headers.authorization.split(' ')[ 1 ];
-
+        console.log("Token at logout ", token);
         redisClient.set(token, 'logout', 'EX', 60 * 60 * 24);
+        const value = await redisClient.get(token);
+        console.log("Token after logout (should be 'logout'):", value);
 
         res.status(200).json({
             message: 'Logged out successfully'
         });
-
 
     } catch (err) {
         console.log(err);

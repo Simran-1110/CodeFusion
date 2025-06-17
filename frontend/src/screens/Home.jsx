@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react'
 import { UserContext } from '../context/user.context'
 import axios from "../config/axios"
 import { useNavigate } from 'react-router-dom'
+import Header from './Header'
 
 const Home = () => {
 
@@ -20,25 +21,34 @@ const Home = () => {
             name: projectName,
         })
             .then((res) => {
-                console.log(res)
+                //console.log(res)
                 setIsModalOpen(false)
             })
             .catch((error) => {
-                console.log(error)
+
+                console.log(error, "Users: ", user)
             })
     }
 
     useEffect(() => {
-        axios.get('/projects/all').then((res) => {
+        axios.get('/projects/all', {
+        headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+        }
+        }).then((res) => {
+            // console.log("/projects/all", user, res.data);
             setProject(res.data.projects)
 
         }).catch(err => {
             console.log(err)
         })
 
-    }, [])
+    }, [isModalOpen,user])
 
     return (
+        <>
+        <Header/>
         <main className='p-4'>
             <div className="projects flex flex-wrap gap-3">
                 <button
@@ -96,6 +106,7 @@ const Home = () => {
 
 
         </main>
+        </>
     )
 }
 
